@@ -89,7 +89,7 @@ const Game =()=>{
     const curMove = history[history.length-1];
 
    
-       console.log(history);
+       
      const handleClick =(nextSquare)=>{
 
        setXtrun(xTrun ? false : true);
@@ -101,8 +101,8 @@ const Game =()=>{
      const undo = () =>{
         
         if(history.length>1){
-            const ele= history.slice(0,-1);
-            setHistory(ele);
+            const newHistory= history.slice(0,-1);
+            setHistory(newHistory);
 
             setXtrun(!xTrun);
 
