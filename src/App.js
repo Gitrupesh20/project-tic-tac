@@ -6,7 +6,6 @@ import { useState } from "react";
 
 const Square = ({value, onSquareClick}) =>{
   
- 
     return(
         <>
 
@@ -15,79 +14,121 @@ const Square = ({value, onSquareClick}) =>{
         </>
     ) ;
 
-    }
+}
 
 
 
-const Board = () => {
+const Board = ({isXtrun,squares, onPlay}) => {
    
-  const [flag,setFlag]=useState(true)
-  const [square,setSquare]=useState(Array(9).fill(null));
   
- 
-  
-  const clickHandler  =(i)=>{
+    const clickHandler  =(i)=>{
 
     
-    if (square[i] ||calWinner(square)) {
+        if (squares[i] ||calculateWinner(squares)) {
+        
+          return;
+        }
     
-      return;
-    }
+    
+        const nextsquares = squares.slice();
+    
+        nextsquares[i]= isXtrun ? "X" : "O";
+          
+          
+          onPlay(nextsquares);
 
+    
+      }
+  
+  let winner = calculateWinner(squares)
 
-    const nextSquare = square.slice();
-
-     if(flag){
-        nextSquare[i] ='X' ;
-       setFlag(false);
-     }else{
-      nextSquare[i] ='O' ;
-      setFlag(true);
-     }
-      
-      
-      setSquare(nextSquare);
-
-  }
-  let winner = calWinner(square)
-
-   let status = winner != null ? "Winner:" + winner  : "winner: ";
+   let status = "Winner: " + winner  ;
 
 
 
     return(
         <>
+        <div>
+           
 
-            <h1 >{status}</h1>
+            <h3 >{winner!=null ? status : "Next Move of " + (isXtrun ? "X" : "O") }</h3>
 
             <div>
-                <Square value={square[0]}  onSquareClick ={() =>clickHandler(0)} />
-                <Square value={square[1]}  onSquareClick ={() =>clickHandler(1)}  />
-                <Square value={square[2]}  onSquareClick ={() =>clickHandler(2)}  />
+                <Square value={squares[0]}  onSquareClick ={() =>clickHandler(0)} />
+                <Square value={squares[1]}  onSquareClick ={() =>clickHandler(1)}  />
+                <Square value={squares[2]}  onSquareClick ={() =>clickHandler(2)}  />
                 
             </div>
 
             <div>
-                <Square value={square[3]}  onSquareClick ={() =>clickHandler(3)} />
-                <Square value={square[4]}  onSquareClick ={() =>clickHandler(4)} />
-                <Square value={square[5]}  onSquareClick ={() =>clickHandler(5)} />
+                <Square value={squares[3]}  onSquareClick ={() =>clickHandler(3)} />
+                <Square value={squares[4]}  onSquareClick ={() =>clickHandler(4)} />
+                <Square value={squares[5]}  onSquareClick ={() =>clickHandler(5)} />
             </div>
 
             <div >
-                <Square value={square[6]} onSquareClick ={() =>clickHandler(6)} />
-                <Square value={square[7]} onSquareClick ={() =>clickHandler(7)} />
-                <Square value={square[8]} onSquareClick ={() =>clickHandler(8)} />
+                <Square value={squares[6]} onSquareClick ={() =>clickHandler(6)} />
+                <Square value={squares[7]} onSquareClick ={() =>clickHandler(7)} />
+                <Square value={squares[8]} onSquareClick ={() =>clickHandler(8)} />
              </div>
 
-           <button className="reset" onClick={()=>setSquare(square.slice().fill(null))}>Reset</button>
         
-             
+             </div>
         </>
 
     )
 }
 
-const calWinner = (square)=>{
+
+
+
+const Game =()=>{
+
+    const [xTrun,setXtrun]=useState(true)
+    const [history,setHistory]=useState([Array(9).fill(null)]);
+    const curMove = history[history.length-1];
+
+   
+       console.log(history);
+     const handleClick =(nextSquare)=>{
+
+       setXtrun(xTrun ? false : true);
+
+       setHistory([...history,nextSquare]);
+
+     }
+
+     const undo = () =>{
+        
+        if(history.length>1){
+            const ele= history.slice(0,-1);
+            setHistory(ele);
+
+            setXtrun(!xTrun);
+
+        }
+        
+     }
+    
+    return(
+        <>
+        <div>
+             <Board isXtrun={xTrun} squares={curMove} onPlay={handleClick}  />
+
+           
+                <button className="restart" onClick={()=>setHistory([history.slice().fill(null)])}>Restart</button>
+
+                <button className="undo" onClick={undo} >UNDO</button>
+        </div>
+            
+        </>
+        
+    );
+
+}
+
+
+const calculateWinner = (square)=>{
 
     const winner=[
         [0,1,2],
@@ -117,7 +158,7 @@ const App = () => {
 
     return (
         <div className="App">
-           <Board/>
+           <Game/>
         </div>
     )
 }

@@ -23,14 +23,24 @@
   
 }
 
-.reset{
+
+h3{
+  margin-right: 3rem;
+}
+
+
+.restart{
   width: 5rem;
   height:3rem;
-  margin-top: 6rem;
-  margin-right: 10rem;
+  margin-top: 3rem;
+  
   font-size: 0.9rem;
 }
 
-h1{
-  margin-right: 8rem;
+.undo{
+  width: 5rem;
+  height:3rem;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  float: right;
 }
